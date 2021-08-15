@@ -2,8 +2,7 @@ import streamlit as st
 import io
 import requests
 import json
-from PIL import Image
-from PIL import ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 st.title('顔認識アプリ')
 
@@ -37,19 +36,21 @@ if uploaded_file is not None:
 
   for result in results:
       rect = result['faceRectangle']
-
+    
       at_rect = result['faceAttributes']
       gender = at_rect['gender']
       age = at_rect['age']
       smile = at_rect['smile']
-
+      font = ImageFont.truetype('NikkyouSans-mLKax.ttf', 15)
+        
       draw = ImageDraw.Draw(img)
       draw.rectangle([(rect['left'], rect['top']), (rect['left']+rect['width'],rect['top']+rect['height'])], fill=None, outline='green', width=5)
-      draw.text([(45+rect['left'], 10+rect['top']+rect['height'])],gender)
-      draw.text([(rect['left'], 10+rect['top']+rect['height'])],'gender:')
-      draw.text([(30+rect['left'], 20+rect['top']+rect['height'])],str(age))
-      draw.text([(rect['left'], 20+rect['top']+rect['height'])],'age:')
-      draw.text([(40+rect['left'], 30+rect['top']+rect['height'])],str(smile))
-      draw.text([(rect['left'], 30+rect['top']+rect['height'])],'smile:')
+      draw.text((70+rect['left'], 10+rect['top']+rect['height']),gender, font=font,fill='#008000')
+      draw.text((rect['left'], 10+rect['top']+rect['height']),'gender:', font=font,fill='#008000')
+      draw.text((60+rect['left'], 25+rect['top']+rect['height']),str(age), font=font,fill='#008000')
+      draw.text((rect['left'], 25+rect['top']+rect['height']),'age:', font=font,fill='#008000')
+      draw.text((rect['left'], 40+rect['top']+rect['height']),'smile:', font=font,fill='#008000')
+      draw.text((60+rect['left'], 40+rect['top']+rect['height']),str(smile), font=font,fill='#008000')
+
   st.image(img, caption='Uploaded Image.', use_column_width=True)
 
